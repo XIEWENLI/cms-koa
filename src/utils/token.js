@@ -27,6 +27,8 @@ const verifyToken = (ctx) => {
       username: result.username,
       token,
     };
+
+    return result;
   } catch (error) {
     ctx.app.emit("error", new Error(USERNAME_LOGIN), ctx);
   }
