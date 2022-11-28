@@ -3,11 +3,29 @@ const path = require("path");
 const multiparty = require("multiparty");
 const filesService = require("../service/file.service");
 
-// 根据hash值获取文件
-const getFileByhash = (hash) => {};
+const pathByType = (type) => {
+  let p;
+  let p2;
+  switch (type) {
+    case "image/jpg":
+      p = "upload/uploadPhotos/slice";
+      p2 = "upload/uploadPhotos/photos";
+      break;
+    case "image/png":
+      p = "upload/uploadPhotos/slice";
+      p2 = "upload/uploadPhotos/photos";
+      break;
+    case "image/mp4":
+      p = "upload/uploadVideo/clice";
+      p2 = "upload/uploadVideo/photos";
+      break;
+  }
+
+  return p;
+};
 
 // 根据hash获取切片数组
-const getFileSliceByhash = (hash) => {
+const getFileSliceByhash = (hash, type) => {
   let readDirs = fs.readdirSync(
     path.resolve(__dirname, "../../upload/uploadPhotos/slice/")
   );
@@ -40,7 +58,7 @@ const upload = (ctx) => {
 };
 
 // 合并切片
-const merge = async (userId = 23, hash, suffix, type, len) => {
+const merge = async (userId, hash, suffix, type, len) => {
   return new Promise((resolve, reject) => {
     setTimeout(async () => {
       let fileHashName = hash + "." + suffix;
@@ -115,7 +133,7 @@ const merge = async (userId = 23, hash, suffix, type, len) => {
         });
       }
 
-      const file = filesService.mergeFile(userId, fileHashName, type);
+      const file = await filesService.mergeFile(userId, fileHashName, type);
 
       //file表存储信息
       resolve("6、上传成功~");
@@ -144,7 +162,6 @@ const download = () => {
 };
 
 module.exports = {
-  getFileByhash,
   getFileSliceByhash,
   upload,
   merge,
