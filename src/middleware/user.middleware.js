@@ -41,7 +41,7 @@ const verifyLogin = async (ctx, next) => {
   }
 
   // 根据用户名获取用户信息
-  const result = await userService.getUserByUserName(username);
+  const result = await userService.getUser("username", username);
   //用户名不存在
   if (!result.length) {
     return ctx.app.emit("error", new Error(USERNAME_NULL), ctx);
@@ -50,10 +50,10 @@ const verifyLogin = async (ctx, next) => {
   if (result[0].password !== toMD5(toMD5(password))) {
     return ctx.app.emit("error", new Error(PASSWORD_ERROR), ctx);
   }
-
   ctx.user = {
     id: result[0].id,
     username: result[0].username,
+    role_id: result[0].role_id,
   };
 
   await next();
