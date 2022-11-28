@@ -1,6 +1,6 @@
 const {
   USERNAME_REPEAT,
-  USERNAME_PASSWORD_NOT_NULL,
+  USERNAME_USERNAMEandPASSWORD_NOT_NULL,
   USERNAME_NULL,
   PASSWORD_ERROR,
   USERNAME_LOGIN,
@@ -13,7 +13,7 @@ function errFn(errorMessage, ctx) {
       status = 409;
       message = "用户名已经存在~";
       break;
-    case USERNAME_PASSWORD_NOT_NULL:
+    case USERNAME_USERNAMEandPASSWORD_NOT_NULL:
       status = 400;
       message = "用户名或者密码不能为空~";
       break;

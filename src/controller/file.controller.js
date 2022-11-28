@@ -7,7 +7,10 @@ const {
 
 class fileController {
   getFileSlice(ctx, next) {
-    const res = getFileSliceByhash(ctx.request.query.hash);
+    const res = getFileSliceByhash(
+      ctx.request.query.hash,
+      ctx.request.query.type
+    );
     ctx.body = res;
   }
 
