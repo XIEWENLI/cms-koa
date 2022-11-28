@@ -2,8 +2,9 @@ const jwt = require("jsonwebtoken");
 const { privateKey, publicKey } = require("../app/config");
 const { USERNAME_LOGIN } = require("../constants/user.constants");
 
-const createToken = (id, username) => {
-  var token = jwt.sign({ id, username }, privateKey, {
+// 生成token
+const createToken = (id, username, role_id) => {
+  var token = jwt.sign({ id, username, role_id }, privateKey, {
     expiresIn: "24h",
     algorithm: "RS256",
   });
@@ -11,6 +12,7 @@ const createToken = (id, username) => {
   return token;
 };
 
+// 验证token
 const verifyToken = (ctx) => {
   // 获取请求携带过来的token
   const authorization = ctx.headers.authorization;
@@ -25,6 +27,7 @@ const verifyToken = (ctx) => {
     ctx.user = {
       id: result.id,
       username: result.username,
+      role_id: result.role_id,
       token,
     };
 
