@@ -2,19 +2,15 @@ const koa = require("koa");
 const app = new koa();
 
 const bodyparser = require("koa-bodyparser");
+const cors = require("koa2-cors");
 
 const useRouter = require("../router");
 const errFn = require("./errFn");
 
 // 请求体解析
 app.use(bodyparser());
-
 // 解决跨域
-app.use(async (ctx, next) => {
-  ctx.set("Access-Control-Allow-Origin", "*");
-  ctx.set("Access-Control-Allow-Methods", "OPTIONS,GET,PUT,POST,DELLETE");
-  await next();
-});
+app.use(cors());
 
 // 路由
 useRouter(app);
