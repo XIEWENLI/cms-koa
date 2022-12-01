@@ -28,7 +28,6 @@ const verifyToken = (ctx) => {
       id: result.id,
       username: result.username,
       role_id: result.role_id,
-      token,
     };
 
     return result;

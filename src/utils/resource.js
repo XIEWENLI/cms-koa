@@ -1,78 +1,67 @@
 const fs = require("fs");
 const path = require("path");
+// 解析formdata数据
 const multiparty = require("multiparty");
 const filesService = require("../service/file.service");
+const { pathByTypeFn } = require("../utils/pathBytype");
 
-const pathByType = (type) => {
-  let p;
-  let p2;
-  switch (type) {
-    case "image/jpg":
-      p = "upload/uploadPhotos/slice";
-      p2 = "upload/uploadPhotos/photos";
-      break;
-    case "image/png":
-      p = "upload/uploadPhotos/slice";
-      p2 = "upload/uploadPhotos/photos";
-      break;
-    case "image/mp4":
-      p = "upload/uploadVideo/clice";
-      p2 = "upload/uploadVideo/photos";
-      break;
-  }
+// 根据hash获取切片名数组
+const getFileSliceByhash = (hash, suffix) => {
+  return new Promise((resolve, reject) => {
+    let pathObj = pathByTypeFn(suffix);
+    let readDirs = fs.readdirSync(
+      path.resolve(__dirname, `../../${pathObj.pathSlice}/`)
+    );
 
-  return p;
-};
+    readDirs = readDirs.filter((item) => {
+      return item.includes(hash);
+    });
 
-// 根据hash获取切片数组
-const getFileSliceByhash = (hash, type) => {
-  let readDirs = fs.readdirSync(
-    path.resolve(__dirname, "../../upload/uploadPhotos/slice/")
-  );
-
-  readDirs = readDirs.filter((item) => {
-    return item.includes(hash);
+    resolve(readDirs);
   });
-
-  return readDirs;
 };
 
 // 上传切片
 const upload = (ctx) => {
-  var form = new multiparty.Form();
-  form.parse(ctx.req, function (err, fields, files) {
-    if (err) return;
-    let fileSliceName = fields.hash[fields.hash.length - 1];
-    let fileSlicePath = files.file[files.file.length - 1].path;
+  return new Promise((resolve, reject) => {
+    var form = new multiparty.Form();
+    form.parse(ctx.req, function (err, fields, files) {
+      if (err) return;
+      let fileSliceName = fields.hash[fields.hash.length - 1];
+      let fileSlicePath = files.file[files.file.length - 1].path;
 
-    // 存储切片
-    let readStream = fs.createReadStream(fileSlicePath);
-    let writeStream = fs.createWriteStream(
-      path.resolve(
-        __dirname,
-        `../../upload/uploadPhotos/slice/${fileSliceName}`
-      )
-    );
-    readStream.pipe(writeStream);
+      // 存储切片;
+      let pathObj = pathByTypeFn(fields.suffix[0]);
+      let readStream = fs.createReadStream(fileSlicePath);
+      let writeStream = fs.createWriteStream(
+        path.resolve(__dirname, `../../${pathObj.pathSlice}/${fileSliceName}`)
+      );
+      readStream.pipe(writeStream);
+    });
+
+    resolve("sccg");
   });
 };
 
 // 合并切片
-const merge = async (userId, hash, suffix, type, len) => {
+const merge = async (user_id, hash, fileName, suffix, type, len) => {
   return new Promise((resolve, reject) => {
     setTimeout(async () => {
       let fileHashName = hash + "." + suffix;
+      let pathObj = pathByTypeFn(suffix);
 
-      // 查找文件是否存在，存在则不用合并
+      // 查找文件是否存在
       let targetDirs = fs.readdirSync(
-        path.resolve(__dirname, "../../upload/uploadPhotos/photos/")
+        path.resolve(__dirname, `../../${pathObj.path}/`)
       );
       let isExist = targetDirs.includes(fileHashName);
 
       // 获取并筛选出符合的文件切片的文件名
-      let readDirs = fs.readdirSync(
-        path.resolve(__dirname, "../../upload/uploadPhotos/slice/")
-      );
+      let readDirs = fs
+        .readdirSync(path.resolve(__dirname, `../../${pathObj.pathSlice}/`))
+        .filter((item) => {
+          return item.includes(hash);
+        });
 
       // 根据上传的切片数量和读取已上传的切片数量对比
       if (readDirs.length !== Number(len)) {
@@ -82,7 +71,7 @@ const merge = async (userId, hash, suffix, type, len) => {
 
       const temporary = [];
       readDirs = readDirs.filter((item) => {
-        // 解决序号超过9的排序问题
+        // 解决序号超过9出现的排序问题
         fileIndex = Number(item.split("_")[1]);
         if (fileIndex >= 10) {
           temporary.push(item);
@@ -102,26 +91,25 @@ const merge = async (userId, hash, suffix, type, len) => {
         }
       }
 
+      //删除切片
       function deleteFile(item) {
         fs.unlinkSync(
-          path.resolve(__dirname, `../../upload/uploadPhotos/slice/${item}`)
+          path.resolve(__dirname, `../../${pathObj.pathSlice}/${item}`)
         );
       }
 
+      // 合并切片成文件
       function writeFile(item) {
         return new Promise((resolve, reject) => {
           let readStream = fs.createReadStream(
-            path.resolve(__dirname, `../../upload/uploadPhotos/slice/${item}`),
+            path.resolve(__dirname, `../../${pathObj.pathSlice}/${item}`),
             {
               flags: "r",
             }
           );
 
           let writeStream = fs.createWriteStream(
-            path.resolve(
-              __dirname,
-              `../../upload/uploadPhotos/photos/${fileHashName}`
-            ),
+            path.resolve(__dirname, `../../${pathObj.path}/${fileHashName}`),
             { flags: "a+" }
           );
           readStream.pipe(writeStream);
@@ -133,31 +121,44 @@ const merge = async (userId, hash, suffix, type, len) => {
         });
       }
 
-      const file = await filesService.mergeFile(userId, fileHashName, type);
-
       //file表存储信息
-      resolve("6、上传成功~");
+      const file = await filesService.mergeFile(
+        user_id,
+        fileHashName,
+        fileName,
+        type
+      );
+
+      resolve("6、合并成功~");
     }, 500);
   });
 };
 
-// 下载切片
-const download = () => {
-  const dirArr = fs.readdirSync(__dirname);
-
-  const fileArr = dirArr.filter((file) => {
-    return file.includes("a44357c2fd2d8a91531ce371e25e9635_");
+// 根据user_id和type获取全部文件信息
+const getinfo = (user_id, type = "video", limit, offset) => {
+  return new Promise((resolve, reject) => {
+    const filesInfo = filesService.getFileInfo(user_id, type, limit, offset);
+    resolve(filesInfo);
   });
+};
 
-  fileArr.forEach((file) => {
-    let read = fs.readFileSync(path.resolve(__dirname, `./${file}`));
-    fs.writeFileSync(
-      path.resolve(__dirname, `./a44357c2fd2d8a91531ce371e25e9635.png`),
-      read,
-      {
-        flag: "a+",
-      }
+const download = (user_id, file_id) => {
+  return new Promise(async (resolve, reject) => {
+    const oneFileInfo = await filesService.getOneFileInfo(user_id, file_id);
+    if (oneFileInfo.length <= 0) {
+      resolve({ file: 0, type: 0 });
+      return;
+    }
+
+    const { fileHashName, type } = oneFileInfo[0];
+    const t = type.split("/")[1];
+    const pathObj = pathByTypeFn(t);
+
+    const file = fs.createReadStream(
+      path.resolve(__dirname, `../../${pathObj.path}/${fileHashName}`)
     );
+
+    resolve({ file, type });
   });
 };
 
@@ -165,5 +166,6 @@ module.exports = {
   getFileSliceByhash,
   upload,
   merge,
+  getinfo,
   download,
 };
