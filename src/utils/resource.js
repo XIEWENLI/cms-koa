@@ -134,11 +134,31 @@ const merge = async (user_id, hash, fileName, suffix, type, len) => {
   });
 };
 
-// 获取文件信息
-const downloadFiles = (user_id, type, limit, offset) => {
+// 根据user_id和type获取全部文件信息
+const getinfo = (user_id, type = "video", limit, offset) => {
   return new Promise((resolve, reject) => {
-    const filesInfo = filesService.getFilesInfo(user_id, type, limit, offset);
+    const filesInfo = filesService.getFileInfo(user_id, type, limit, offset);
     resolve(filesInfo);
+  });
+};
+
+const download = (user_id, file_id) => {
+  return new Promise(async (resolve, reject) => {
+    const oneFileInfo = await filesService.getOneFileInfo(user_id, file_id);
+    if (oneFileInfo.length <= 0) {
+      resolve({ file: 0, type: 0 });
+      return;
+    }
+
+    const { fileHashName, type } = oneFileInfo[0];
+    const t = type.split("/")[1];
+    const pathObj = pathByTypeFn(t);
+
+    const file = fs.createReadStream(
+      path.resolve(__dirname, `../../${pathObj.path}/${fileHashName}`)
+    );
+
+    resolve({ file, type });
   });
 };
 
@@ -146,5 +166,6 @@ module.exports = {
   getFileSliceByhash,
   upload,
   merge,
-  downloadFiles,
+  getinfo,
+  download,
 };

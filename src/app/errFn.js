@@ -4,6 +4,7 @@ const {
   USERNAME_NULL,
   PASSWORD_ERROR,
   USERNAME_LOGIN,
+  RESOURCE_NOT_EXIST,
 } = require("../constants/user.constants");
 
 function errFn(errorMessage, ctx) {
@@ -29,9 +30,13 @@ function errFn(errorMessage, ctx) {
       status = 0;
       message = "请先登录~";
       break;
+    case RESOURCE_NOT_EXIST:
+      status = 0;
+      message = "请求资源不存在~";
+      break;
     default:
       status = 0;
-      message = "资源不存在";
+      message = "资源不存在~";
   }
 
   ctx.body = {

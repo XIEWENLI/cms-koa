@@ -4,8 +4,10 @@ const {
   getFileSlice,
   uploadFileSlice,
   mergeFile,
-  getFiles,
+  getFileInfo,
+  downloadFile,
 } = require("../controller/file.controller");
+const { obtain, download } = require("../middleware/file.middleware");
 const { verifyAuth } = require("../middleware/file.middleware");
 
 const fileRouter = new Router({ prefix: "/file" });
@@ -19,7 +21,13 @@ fileRouter.post("/uploadFileSlice", uploadFileSlice);
 // 合并文件切片
 fileRouter.get("/mergeFile", mergeFile);
 
+// 获取指定条件的全部文件信息
+fileRouter.get("/getFileInfo", getFileInfo);
+
 // 获取文件
-fileRouter.get("/getFiles", getFiles);
+fileRouter.get("/getFile", obtain, downloadFile);
+
+// 下载文件
+fileRouter.get("/downloadFile", download, downloadFile);
 
 module.exports = fileRouter;

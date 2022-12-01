@@ -2,8 +2,11 @@ const {
   upload,
   getFileSliceByhash,
   merge,
-  downloadFiles,
+  getinfo,
+  download,
 } = require("../utils/resource");
+
+const { RESOURCE_NOT_EXIST } = require("../constants/user.constants");
 
 class fileController {
   // 获取文件切片名数组
@@ -46,16 +49,35 @@ class fileController {
     };
   }
 
-  //下载文件
-  async getFiles(ctx, next) {
-    const filesInfo = await downloadFiles(
+  // 根据user_id和type获取全部文件信息
+  async getFileInfo(ctx, next) {
+    const fileInfo = await getinfo(
       ctx.user?.id,
       ctx.request.query.type,
       ctx.request.query.limit,
       ctx.request.query.offset
     );
 
-    ctx.body = filesInfo;
+    ctx.body = fileInfo;
+  }
+
+  getdFile() {}
+
+  //下载文件
+  async downloadFile(ctx, next) {
+    const { file, type } = await download(
+      ctx.user?.id,
+      ctx.request.query.file_id
+    );
+
+    if (!file || !type) {
+      return ctx.app.emit("error", new Error(RESOURCE_NOT_EXIST), ctx);
+    }
+
+    if (ctx.download) {
+      ctx.response.set("content-type", type);
+    }
+    ctx.body = file;
   }
 }
 

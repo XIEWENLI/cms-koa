@@ -25,10 +25,17 @@ class fileService {
     return res[0];
   }
 
-  // 获取文件信息
-  async getFilesInfo(user_id = 1, type = "image", limit = 12, offset = 0) {
+  // 根据user_id和type获取全部文件信息
+  async getFileInfo(user_id = 1, type = "image", limit = 12, offset = 0) {
     const mysql = `SELECT * FROM file WHERE user_id=? AND type LIKE ? LIMIT ${limit} OFFSET ${offset}`;
     const result = await pool.execute(mysql, [user_id, type + "%"]);
+    return result[0];
+  }
+
+  // 获取单个文件信息
+  async getOneFileInfo(user_id = 1, file_id = 5) {
+    const mysql = `SELECT * FROM file WHERE user_id=? AND id=?`;
+    const result = await pool.execute(mysql, [user_id, file_id]);
     return result[0];
   }
 }
