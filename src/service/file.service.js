@@ -33,7 +33,7 @@ class fileService {
   }
 
   // 获取单个文件信息
-  async getOneFileInfo(user_id = 1, file_id = 5) {
+  async getOneFileInfo(user_id = 1, file_id = 1) {
     const mysql = `SELECT * FROM file WHERE user_id=? AND id=?`;
     const result = await pool.execute(mysql, [user_id, file_id]);
     return result[0];

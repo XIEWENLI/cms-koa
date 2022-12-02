@@ -3,7 +3,9 @@ const path = require("path");
 // 解析formdata数据
 const multiparty = require("multiparty");
 const filesService = require("../service/file.service");
+
 const { pathByTypeFn } = require("../utils/pathBytype");
+const { writeMomery } = require("../utils/writeMomery");
 
 // 根据hash获取切片名数组
 const getFileSliceByhash = (hash, suffix) => {
@@ -65,7 +67,7 @@ const merge = async (user_id, hash, fileName, suffix, type, len) => {
 
       // 根据上传的切片数量和读取已上传的切片数量对比
       if (readDirs.length !== Number(len)) {
-        resolve("6、切片不够上传失败~");
+        resolve("6、切片不够上传失败，请重新上传~");
         return;
       }
 
@@ -86,6 +88,9 @@ const merge = async (user_id, hash, fileName, suffix, type, len) => {
       for (const item of readDirs) {
         if (!isExist) {
           await writeFile(item);
+
+          // 获取文件大小存储到common表
+          writeMomery(pathObj.path, fileHashName, 1);
         } else {
           deleteFile(item);
         }

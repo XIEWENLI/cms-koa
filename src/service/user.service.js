@@ -17,7 +17,7 @@ class UserServise {
   async getUser(param, paramValue) {
     let mysql;
     switch (param) {
-      case (param = "username"):
+      case "username":
         mysql = `SELECT * FROM user WHERE username=?`;
         break;
     }
@@ -30,6 +30,15 @@ class UserServise {
     const mysql = `SELECT * FROM menu 
                   WHERE id in (SELECT menu_id FROM role_menu WHERE role_id=?)`;
     const result = await pool.execute(mysql, [role_id]);
+
+    return result[0];
+  }
+
+  // 修改单个用户 登录\禁止 状态
+  async userLoginStatus(user_id, loginStatus) {
+    console.log(user_id, loginStatus);
+    const mysql = `UPDATE user SET loginStatus = ? WHERE id = ?`;
+    const result = await pool.execute(mysql, [loginStatus, user_id]);
 
     return result[0];
   }
