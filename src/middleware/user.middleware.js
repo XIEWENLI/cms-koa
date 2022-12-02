@@ -16,7 +16,7 @@ const verifyRegister = async (ctx, next) => {
   }
 
   // // 用户名是否存在
-  const result = await userService.getUserByUserName(username);
+  const result = await userService.getUser("username", username);
   if (result.length) {
     return ctx.app.emit("error", new Error(USERNAME_REPEAT), ctx);
   }

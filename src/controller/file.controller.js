@@ -61,8 +61,6 @@ class fileController {
     ctx.body = fileInfo;
   }
 
-  getdFile() {}
-
   //下载文件
   async downloadFile(ctx, next) {
     const { file, type } = await download(

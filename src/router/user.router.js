@@ -7,12 +7,20 @@ const {
   passwordMD5,
   verifyLogin,
 } = require("../middleware/user.middleware");
-const { register, login } = require("../controller/user.controller");
+
+const {
+  register,
+  login,
+  updateUserLoginStatus,
+} = require("../controller/user.controller");
 
 // 注册
 userRouter.post("/register", verifyRegister, passwordMD5, register);
 
 // 登录
 userRouter.post("/login", verifyLogin, login);
+
+// 个人用户 开启/禁止 登录
+userRouter.get("/updateUserLoginStatus", updateUserLoginStatus);
 
 module.exports = userRouter;
