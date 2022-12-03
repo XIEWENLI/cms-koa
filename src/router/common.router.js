@@ -1,7 +1,10 @@
 const Router = require("koa-router");
 
-const fileRouter = new Router({ prefix: "/common" });
+const { updateAllStatus } = require("../controller/common.controller");
 
-fileRouter.get("/update");
+const commonRouter = new Router({ prefix: "/common" });
 
-module.exports = fileRouter;
+// 修改common的所有状态其中之一
+commonRouter.get("/updateAllStatus", updateAllStatus);
+
+module.exports = commonRouter;

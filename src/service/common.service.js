@@ -13,6 +13,24 @@ class commonService {
     const mysql2 = `UPDATE common SET memory = ?`;
     await pool.execute(mysql2, [size]);
   }
+
+  async writeNumberOfUsers() {
+    const mysql = `SELECT numberOfUsers FROM common`;
+    const result = await pool.execute(mysql);
+
+    let sum = ++result[0][0].numberOfUsers;
+
+    const mysql2 = `UPDATE common SET numberOfUsers = ?`;
+    await pool.execute(mysql2, [sum]);
+  }
+
+  // 修改common的所有状态其中之一
+  async updateAllStatus(fieldName, status) {
+    const mysql = `UPDATE common SET ${fieldName} = ?`;
+    const result = await pool.execute(mysql, [Number(status)]);
+
+    return result[0];
+  }
 }
 
 module.exports = new commonService();

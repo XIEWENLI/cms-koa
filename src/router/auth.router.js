@@ -5,7 +5,7 @@ const { verifyAuth } = require("../middleware/auth.middleware");
 
 const authRouter = new Router({ prefix: "/auth" });
 
-// 登录认证token
+// 认证token
 authRouter.get("/verifyToken", verifyAuth, success);
 
 module.exports = authRouter;
