@@ -1,10 +1,16 @@
 const userServise = require("../service/user.service");
 const { createToken } = require("../utils/token");
 
+const { writeNumberOfUsers } = require("../utils/writeNumberOfUsers");
+
 class UserController {
   // 注册
   async register(ctx, next) {
     await userServise.create(ctx.request.body);
+
+    // comon表用户记录+1
+    writeNumberOfUsers();
+
     ctx.body = {
       status: 1,
       message: "注册成功~",
@@ -17,7 +23,8 @@ class UserController {
 
     // 创建token
     const token = createToken(id, username, role_id);
-    // 菜单menu
+
+    // 获取菜单menu
     const menu = await userServise.getMenu(role_id);
 
     ctx.body = { status: 1, id, username, role_id, token, menu };

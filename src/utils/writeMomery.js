@@ -4,7 +4,7 @@ const path = require("path");
 const commonService = require("../service/common.service");
 
 // 获取改文件大小存储到common表
-function writeMomery(p, fileHashName, sum = 1) {
+const writeMomery = (p, fileHashName, sum = 1) => {
   fs.stat(
     path.resolve(__dirname, `../../${p}/${fileHashName}`),
     (err, data) => {
@@ -14,7 +14,7 @@ function writeMomery(p, fileHashName, sum = 1) {
       }
     }
   );
-}
+};
 
 module.exports = {
   writeMomery,
