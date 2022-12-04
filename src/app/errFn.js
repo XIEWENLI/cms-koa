@@ -5,6 +5,8 @@ const {
   PASSWORD_ERROR,
   USERNAME_LOGIN,
   RESOURCE_NOT_EXIST,
+  VERIFYAUTH_NOT,
+  ROLENAME_EXIST,
 } = require("../constants/user.constants");
 
 function errFn(errorMessage, ctx) {
@@ -33,6 +35,14 @@ function errFn(errorMessage, ctx) {
     case RESOURCE_NOT_EXIST:
       status = 0;
       message = "请求资源不存在~";
+      break;
+    case VERIFYAUTH_NOT:
+      status = 0;
+      message = "您没有该权限~";
+      break;
+    case ROLENAME_EXIST:
+      status = 0;
+      message = "角色名已存在~";
       break;
     default:
       status = 0;

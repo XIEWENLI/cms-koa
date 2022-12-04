@@ -1,4 +1,4 @@
-const { writeAllStatus } = require("../utils/writeAllStatus");
+const { writeAllStatus } = require("../hooks/writeAllStatus");
 
 class CommonController {
   // 修改common的所有状态其中之一

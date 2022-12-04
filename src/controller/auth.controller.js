@@ -1,6 +1,9 @@
 class AuthController {
   success(ctx, next) {
-    ctx.body = ctx.user;
+    ctx.body = {
+      status: 1,
+      ...ctx.user,
+    };
   }
 }
 

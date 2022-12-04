@@ -5,7 +5,7 @@ const multiparty = require("multiparty");
 const filesService = require("../service/file.service");
 
 const { pathByTypeFn } = require("../utils/pathBytype");
-const { writeMomery } = require("../utils/writeMomery");
+const { writeMomery } = require("../hooks/writeMomery");
 
 // 根据hash获取切片名数组
 const getFileSliceByhash = (hash, suffix) => {
