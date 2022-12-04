@@ -1,7 +1,7 @@
 const userServise = require("../service/user.service");
 const { createToken } = require("../utils/token");
 
-const { writeNumberOfUsers } = require("../utils/writeNumberOfUsers");
+const { writeNumberOfUsers } = require("../hooks/writeNumberOfUsers");
 
 class UserController {
   // 注册

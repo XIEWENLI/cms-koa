@@ -4,6 +4,8 @@ const USERNAME_NULL = "用户名不存在~";
 const PASSWORD_ERROR = "密码错误~";
 const USERNAME_LOGIN = "请先登录~";
 const RESOURCE_NOT_EXIST = "资源不存在~";
+const VERIFYAUTH_NOT = "您没有该权限~";
+const ROLENAME_EXIST = "角色名已经存在~";
 
 module.exports = {
   USERNAME_REPEAT,
@@ -12,4 +14,6 @@ module.exports = {
   PASSWORD_ERROR,
   USERNAME_LOGIN,
   RESOURCE_NOT_EXIST,
+  VERIFYAUTH_NOT,
+  ROLENAME_EXIST,
 };

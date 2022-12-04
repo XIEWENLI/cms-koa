@@ -1,6 +1,11 @@
 const { verifyToken } = require("../utils/token");
 
-const { USERNAME_LOGIN } = require("../constants/user.constants");
+const {
+  USERNAME_LOGIN,
+  VERIFYAUTH_NOT,
+} = require("../constants/user.constants");
+
+const { power } = require("../service/auth.servise");
 
 const verifyAuth = async (ctx, next) => {
   // 验证token
@@ -13,6 +18,22 @@ const verifyAuth = async (ctx, next) => {
   await next();
 };
 
+// 权限验证
+const verifyPower = async (ctx, next) => {
+  let path = ctx.request.path;
+  let userObj = ctx.user;
+
+  const res = await power(path, userObj.role_id);
+
+  if (res.length <= 0) {
+    ctx.app.emit("error", new Error(VERIFYAUTH_NOT), ctx);
+    return;
+  }
+
+  await next();
+};
+
 module.exports = {
   verifyAuth,
+  verifyPower,
 };
