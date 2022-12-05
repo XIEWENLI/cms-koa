@@ -6,6 +6,7 @@ const USERNAME_LOGIN = "请先登录~";
 const RESOURCE_NOT_EXIST = "资源不存在~";
 const VERIFYAUTH_NOT = "您没有该权限~";
 const ROLENAME_EXIST = "角色名已经存在~";
+const PARAM_NOT_NULL = "参数不能为空~";
 
 module.exports = {
   USERNAME_REPEAT,
@@ -16,4 +17,5 @@ module.exports = {
   RESOURCE_NOT_EXIST,
   VERIFYAUTH_NOT,
   ROLENAME_EXIST,
+  PARAM_NOT_NULL,
 };

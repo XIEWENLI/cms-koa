@@ -7,6 +7,7 @@ const {
   RESOURCE_NOT_EXIST,
   VERIFYAUTH_NOT,
   ROLENAME_EXIST,
+  PARAM_NOT_NULL,
 } = require("../constants/user.constants");
 
 function errFn(errorMessage, ctx) {
@@ -43,6 +44,10 @@ function errFn(errorMessage, ctx) {
     case ROLENAME_EXIST:
       status = 0;
       message = "角色名已存在~";
+      break;
+    case PARAM_NOT_NULL:
+      status = 0;
+      message = "参数不能为空~";
       break;
     default:
       status = 0;
