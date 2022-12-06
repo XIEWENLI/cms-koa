@@ -5,7 +5,7 @@ const {
   VERIFYAUTH_NOT,
 } = require("../constants/user.constants");
 
-const { power } = require("../service/auth.servise");
+const authServise = require("../service/auth.servise");
 
 const verifyAuth = async (ctx, next) => {
   // 验证token
@@ -23,11 +23,13 @@ const verifyPower = async (ctx, next) => {
   let path = ctx.request.path;
   let userObj = ctx.user;
 
-  const res = await power(path, userObj.role_id);
+  if (userObj.role_id !== 1) {
+    const res = await authServise.power(path, userObj.role_id);
 
-  if (res.length <= 0) {
-    ctx.app.emit("error", new Error(VERIFYAUTH_NOT), ctx);
-    return;
+    if (res.length <= 0) {
+      ctx.app.emit("error", new Error(VERIFYAUTH_NOT), ctx);
+      return;
+    }
   }
 
   await next();

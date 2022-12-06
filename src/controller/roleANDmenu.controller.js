@@ -1,22 +1,22 @@
 const roleANDmenuServise = require("../service/roleANDmenu.servise");
-const { ROLENAME_EXIST } = require("../constants/user.constants");
+const {
+  ROLENAME_EXIST,
+  PARAM_NOT_NULL,
+} = require("../constants/user.constants");
 
 class RoleController {
   async createRole(ctx, next) {
     let roleName = ctx.request.query.roleName;
     let grade = Number(ctx.request.query.grade);
-    let menu_idArr = Array.from(ctx.request.query.menu_idArr);
+    let menu_idArr = ctx.request.query.menu_idArr;
+    menu_idArr = menu_idArr ? menu_idArr.split(",") : 0;
 
     if (!roleName || !grade || !menu_idArr) {
-      ctx.body = {
-        status: 0,
-        message: "参数不能为空~",
-      };
-      return;
+      return ctx.app.emit("error", new Error(PARAM_NOT_NULL), ctx);
     }
 
     // role表创建
-    const res = await roleANDmenuServise.createRoleAndMenu(
+    const res = await roleANDmenuServise.createRole(
       roleName,
       grade,
       menu_idArr
@@ -26,19 +26,49 @@ class RoleController {
       return;
     }
 
-    // role_menu表角色添加权限
-    let role_id = res;
-    roleANDmenuServise.addRole_Menu(role_id, menu_idArr);
-
     ctx.body = {
       status: 1,
       message: "角色创建成功~",
     };
   }
 
-  updateRole() {
-    let user_id = ctx.request.query.user_id;
-    let menu_id_arr = ctx.request.query.menu_id_arr;
+  // 修改角色权限
+  updateRole(ctx, next) {
+    let role_id = ctx.request.query.role_id;
+    let menu_idArr = ctx.request.query.menu_idArr;
+    menu_idArr = menu_idArr ? menu_idArr.split(",") : 0;
+
+    if (!role_id || !menu_idArr) {
+      return ctx.app.emit("error", new Error(PARAM_NOT_NULL), ctx);
+    }
+
+    roleANDmenuServise.updateRole_Menu(role_id, menu_idArr);
+
+    ctx.body = {
+      status: 1,
+      message: "权限修改成功~",
+    };
+  }
+
+  // 查询所有角色
+  async getRole(ctx, next) {
+    const res = await roleANDmenuServise.getRoleAndPower();
+
+    ctx.body = {
+      status: 1,
+      message: res,
+    };
+  }
+
+  //指定删除角色
+  deleteRole(ctx, next) {
+    let role_id = ctx.request.query.role_id;
+    roleANDmenuServise.deleteRoleById(role_id);
+
+    ctx.body = {
+      status: 1,
+      message: "删除成功",
+    };
   }
 }
 
