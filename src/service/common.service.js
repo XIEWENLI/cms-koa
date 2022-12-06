@@ -1,6 +1,6 @@
 const pool = require("../app/database");
 
-class commonService {
+class CommonService {
   async updateMemory(fileSize) {
     const mysql = `SELECT memory FROM common`;
     const result = await pool.execute(mysql);
@@ -33,4 +33,4 @@ class commonService {
   }
 }
 
-module.exports = new commonService();
+module.exports = new CommonService();

@@ -49,6 +49,27 @@ class RoleController {
       message: "权限修改成功~",
     };
   }
+
+  // 查询所有角色
+  async getRole(ctx, next) {
+    const res = await roleANDmenuServise.getRoleAndPower();
+
+    ctx.body = {
+      status: 1,
+      message: res,
+    };
+  }
+
+  //指定删除角色
+  deleteRole(ctx, next) {
+    let role_id = ctx.request.query.role_id;
+    roleANDmenuServise.deleteRoleById(role_id);
+
+    ctx.body = {
+      status: 1,
+      message: "删除成功",
+    };
+  }
 }
 
 module.exports = new RoleController();

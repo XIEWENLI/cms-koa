@@ -41,6 +41,25 @@ class RoleANDmenu {
     // 角色添加权限
     this.addRole_Menu(role_id, menu_idArr);
   }
+
+  // 查询所有角色（附带每个角色的权限）
+  async getRoleAndPower() {
+    const mysql = `SELECT role.id, role.roleName, role.grade,
+    JSON_ARRAYAGG(JSON_OBJECT('id',menu.id,'path', menu.menuURL, '权限名称', menu.name)) as power
+    FROM role
+    LEFT JOIN role_menu ON role.id = role_menu.role_id
+    LEFT JOIN menu ON role_menu.menu_id = menu.id
+    GROUP BY role.id;`;
+    const result = await pool.execute(mysql);
+
+    return result[0];
+  }
+
+  //指定删除角色
+  async deleteRoleById(role_id) {
+    const mysql = `DELETE FROM role WHERE id=?`;
+    await pool.execute(mysql, [Number(role_id)]);
+  }
 }
 
 module.exports = new RoleANDmenu();
