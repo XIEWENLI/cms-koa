@@ -2,7 +2,7 @@ const pool = require("../app/database");
 class UserServise {
   // 创建用户
   async create(user) {
-    let role_id = user.role_id ? user.role_id : 1;
+    let role_id = 2;
     const mysql = `INSERT INTO user(username,password,role_id) VALUES(?,?,?)`;
     const result = await pool.execute(mysql, [
       user.username,
@@ -36,9 +36,16 @@ class UserServise {
 
   // 修改单个用户 登录\禁止 状态
   async userLoginStatus(user_id, loginStatus) {
-    console.log(user_id, loginStatus);
     const mysql = `UPDATE user SET loginStatus = ? WHERE id = ?`;
     const result = await pool.execute(mysql, [loginStatus, user_id]);
+
+    return result[0];
+  }
+
+  // 获取用户 登录/禁止 状态
+  async getUserStatus(user_id) {
+    const mysql = `SELECT loginStatus FROM user WHERE id=?`;
+    const result = await pool.execute(mysql, [user_id]);
 
     return result[0];
   }

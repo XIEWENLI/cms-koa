@@ -6,7 +6,6 @@ const {
 } = require("../constants/user.constants");
 
 const authServise = require("../service/auth.servise");
-
 const verifyAuth = async (ctx, next) => {
   // 验证token
   const result = verifyToken(ctx);
