@@ -7,6 +7,8 @@ const RESOURCE_NOT_EXIST = "资源不存在~";
 const VERIFYAUTH_NOT = "您没有该权限~";
 const ROLENAME_EXIST = "角色名已经存在~";
 const PARAM_NOT_NULL = "参数不能为空~";
+const FUNCTION_NOT = "该功能已关闭，暂时无法访问~";
+const FUNCTION_NOT_ONE = "您账户该功能已被禁止，暂时无法访问~";
 
 module.exports = {
   USERNAME_REPEAT,
@@ -18,4 +20,6 @@ module.exports = {
   VERIFYAUTH_NOT,
   ROLENAME_EXIST,
   PARAM_NOT_NULL,
+  FUNCTION_NOT,
+  FUNCTION_NOT_ONE,
 };

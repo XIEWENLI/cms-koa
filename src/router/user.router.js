@@ -20,7 +20,7 @@ userRouter.post("/register", verifyRegister, passwordMD5, register);
 // 登录
 userRouter.post("/login", verifyLogin, login);
 
-// 单个用户 开启/禁止 登录，user表
+// 对单个用户 开启/禁止 登录，user表
 userRouter.get(
   "/updateUserLoginStatus",
   verifyAuth,

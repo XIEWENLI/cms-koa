@@ -8,6 +8,8 @@ const {
   VERIFYAUTH_NOT,
   ROLENAME_EXIST,
   PARAM_NOT_NULL,
+  FUNCTION_NOT,
+  FUNCTION_NOT_ONE,
 } = require("../constants/user.constants");
 
 function errFn(errorMessage, ctx) {
@@ -48,6 +50,14 @@ function errFn(errorMessage, ctx) {
     case PARAM_NOT_NULL:
       status = 0;
       message = "参数不能为空~";
+      break;
+    case FUNCTION_NOT:
+      status = 0;
+      message = "该功能已关闭，暂时无法访问~";
+      break;
+    case FUNCTION_NOT_ONE:
+      status = 0;
+      message = "您账户该功能已被禁止，暂时无法访问~";
       break;
     default:
       status = 0;

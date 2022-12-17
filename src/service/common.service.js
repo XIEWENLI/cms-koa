@@ -31,6 +31,14 @@ class CommonService {
 
     return result[0];
   }
+
+  // 获取common的所有状态其中之一
+  async getCommonStatus(fieldName) {
+    const mysql = `SELECT ${fieldName} FROM common`;
+    const result = await pool.execute(mysql);
+
+    return result[0];
+  }
 }
 
 module.exports = new CommonService();
