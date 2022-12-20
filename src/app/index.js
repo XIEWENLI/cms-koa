@@ -7,10 +7,10 @@ const cors = require("koa2-cors");
 const useRouter = require("../router");
 const errFn = require("./errFn");
 
-// 请求体解析
-app.use(bodyparser());
 // 解决跨域
 app.use(cors());
+// 请求体解析
+app.use(bodyparser());
 
 // 路由
 useRouter(app);
