@@ -58,7 +58,10 @@ class fileController {
       ctx.request.query.offset
     );
 
-    ctx.body = fileInfo;
+    ctx.body = {
+      status: 1,
+      message: fileInfo,
+    };
   }
 
   //下载文件

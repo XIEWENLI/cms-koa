@@ -30,6 +30,19 @@ class UserController {
     ctx.body = { status: 1, id, username, role_id, token, menu };
   }
 
+  // 获取自定条件的所有用户
+  async getUsers(ctx, next) {
+    const usersInfo = await userServise.getUsersInfo(
+      ctx.request.query.limit,
+      ctx.request.query.offset
+    );
+
+    ctx.body = {
+      status: 1,
+      message: usersInfo,
+    };
+  }
+
   // 修改单个用户 登录\禁止 状态
   async updateUserLoginStatus(ctx, next) {
     const res = await userServise.userLoginStatus(

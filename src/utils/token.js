@@ -20,7 +20,6 @@ const verifyToken = (ctx) => {
     return ctx.app.emit("error", new Error(USERNAME_LOGIN), ctx);
   }
   const token = authorization.replace("Bearer ", "");
-
   // 验证token
   try {
     const result = jwt.verify(token, publicKey, { algorithms: ["RS256"] });
@@ -31,7 +30,7 @@ const verifyToken = (ctx) => {
     };
 
     return result;
-  } catch (error) {
+  } catch (err) {
     ctx.app.emit("error", new Error(USERNAME_LOGIN), ctx);
   }
 };
