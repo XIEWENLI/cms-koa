@@ -61,12 +61,6 @@ const verifyLogin = async (ctx, next) => {
     return ctx.app.emit("error", new Error(FUNCTION_NOT), ctx);
   }
 
-  // 验证该功能是否关闭_单个
-  const isStatus2 = await verifyUserStatus(result[0].id);
-  if (!isStatus2 && result[0].id != 1) {
-    return ctx.app.emit("error", new Error(FUNCTION_NOT_ONE), ctx);
-  }
-
   //用户名不存在
   if (!result.length) {
     return ctx.app.emit("error", new Error(USERNAME_NULL), ctx);
@@ -74,6 +68,12 @@ const verifyLogin = async (ctx, next) => {
   // 密码错误
   if (result[0].password !== toMD5(toMD5(password))) {
     return ctx.app.emit("error", new Error(PASSWORD_ERROR), ctx);
+  }
+
+  // 验证该功能是否关闭_单个
+  const isStatus2 = await verifyUserStatus(result[0].id);
+  if (!isStatus2 && result[0].id != 1) {
+    return ctx.app.emit("error", new Error(FUNCTION_NOT_ONE), ctx);
   }
 
   ctx.user = {

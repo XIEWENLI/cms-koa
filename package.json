@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/XIEWENLI/personal-website-koa#readme",
   "dependencies": {
+    "@koa/cors": "^4.0.0",
     "dotenv": "^16.0.2",
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.13.4",

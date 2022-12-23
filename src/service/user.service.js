@@ -25,6 +25,13 @@ class UserServise {
     return result[0];
   }
 
+  // 获取自定条件的所有用户
+  async getUsersInfo(limit = 12, offset = 0) {
+    const mysql = `SELECT id,username,wx_openid,loginStatus,role_id FROM user WHERE id !=1 LIMIT ${limit} OFFSET ${offset}`;
+    const result = await pool.execute(mysql);
+    return result[0];
+  }
+
   // 获取menu
   async getMenu(role_id) {
     const mysql = `SELECT * FROM menu 
