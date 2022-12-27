@@ -16,7 +16,7 @@ const {
 // 1、注册-账号合法性
 const verifyRegister = async (ctx, next) => {
   // 验证该功能是否关闭
-  let isStatus = await verifyCommonStatus("register_all_admin");
+  let isStatus = await verifyCommonStatus("registerStatus_all_admin");
   if (!isStatus) {
     return ctx.app.emit("error", new Error(FUNCTION_NOT), ctx);
   }

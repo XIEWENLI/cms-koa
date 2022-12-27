@@ -60,6 +60,14 @@ class RoleANDmenu {
     const mysql = `DELETE FROM role WHERE id=?`;
     await pool.execute(mysql, [Number(role_id)]);
   }
+
+  // 获取所有权限
+  async power() {
+    const mysql = `SELECT * FROM menu`;
+    const result = await pool.execute(mysql);
+
+    return result[0];
+  }
 }
 
 module.exports = new RoleANDmenu();
