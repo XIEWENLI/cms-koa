@@ -36,7 +36,6 @@ class CommonService {
   async getCommonStatus(fieldName) {
     const mysql = `SELECT ${fieldName} FROM common`;
     const result = await pool.execute(mysql);
-
     return result[0];
   }
 }

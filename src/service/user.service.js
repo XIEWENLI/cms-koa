@@ -13,6 +13,14 @@ class UserServise {
     return result;
   }
 
+  // 删除用户
+  async delUserByUserId(user_id) {
+    const mysql = `DELETE FROM user WHERE id=?;`;
+    const result = await pool.execute(mysql, [user_id]);
+
+    return result;
+  }
+
   // 根据传过来的条件和参数查询用户
   async getUser(param, paramValue) {
     let mysql;
@@ -26,9 +34,10 @@ class UserServise {
   }
 
   // 获取自定条件的所有用户
-  async getUsersInfo(limit = 12, offset = 0) {
+  async getUsersInfo(limit = 10, offset = 0) {
     const mysql = `SELECT id,username,wx_openid,loginStatus,role_id FROM user WHERE id !=1 LIMIT ${limit} OFFSET ${offset}`;
     const result = await pool.execute(mysql);
+
     return result[0];
   }
 

@@ -30,6 +30,12 @@ class UserController {
     ctx.body = { status: 1, id, username, role_id, token, menu };
   }
 
+  // 删除用户
+  async delUser(ctx, next) {
+    await userServise.delUserByUserId(ctx.request.query.user_id);
+    ctx.body = { status: 1, message: "删除成功~" };
+  }
+
   // 获取自定条件的所有用户
   async getUsers(ctx, next) {
     const usersInfo = await userServise.getUsersInfo(

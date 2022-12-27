@@ -10,6 +10,7 @@ const {
   login,
   getUsers,
   updateUserLoginStatus,
+  delUser,
 } = require("../controller/user.controller");
 const { verifyAuth, verifyPower } = require("../middleware/auth.middleware");
 
@@ -20,6 +21,9 @@ userRouter.post("/register", verifyRegister, passwordMD5, register);
 
 // 登录
 userRouter.post("/login", verifyLogin, login);
+
+// 删除用户
+userRouter.get("/delUser", delUser);
 
 // 获取自定条件的所有用户
 userRouter.get("/getUsers", verifyAuth, verifyPower, getUsers);

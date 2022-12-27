@@ -33,7 +33,7 @@ class RoleController {
   }
 
   // 修改角色权限
-  updateRole(ctx, next) {
+  async updateRole(ctx, next) {
     let role_id = ctx.request.query.role_id;
     let menu_idArr = ctx.request.query.menu_idArr;
     menu_idArr = menu_idArr ? menu_idArr.split(",") : 0;
@@ -42,7 +42,7 @@ class RoleController {
       return ctx.app.emit("error", new Error(PARAM_NOT_NULL), ctx);
     }
 
-    roleANDmenuServise.updateRole_Menu(role_id, menu_idArr);
+    await roleANDmenuServise.updateRole_Menu(role_id, menu_idArr);
 
     ctx.body = {
       status: 1,
@@ -68,6 +68,16 @@ class RoleController {
     ctx.body = {
       status: 1,
       message: "删除成功",
+    };
+  }
+
+  // 获取所有权限
+  async getPower(ctx, next) {
+    const res = await roleANDmenuServise.power();
+
+    ctx.body = {
+      status: 1,
+      message: res,
     };
   }
 }
