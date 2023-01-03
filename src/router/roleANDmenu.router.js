@@ -6,6 +6,8 @@ const {
   getRole,
   deleteRole,
   getPower,
+  getRoleById,
+  getAllRole,
 } = require("../controller/roleANDmenu.controller");
 const { verifyAuth, verifyPower } = require("../middleware/auth.middleware");
 
@@ -25,5 +27,11 @@ roleANDmenu.get("/updateRole", verifyAuth, verifyPower, updateRole);
 
 // 获取所有的权限
 roleANDmenu.get("/getPower", getPower);
+
+// 获取指定角色接口
+roleANDmenu.get("/getRoleById", verifyAuth, verifyPower, getRoleById);
+
+// 查询所有角色（不附带权限信息）
+roleANDmenu.get("/getAllRole", verifyAuth, verifyPower, getAllRole);
 
 module.exports = roleANDmenu;

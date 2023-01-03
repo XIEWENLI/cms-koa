@@ -61,6 +61,18 @@ class UserController {
       message: "单个用户登录状态修改成功~",
     };
   }
+
+  // 修改角色
+  async updateRole(ctx, next) {
+    await userServise.updateRole(
+      ctx.request.query.user_id,
+      ctx.request.query.role_id
+    );
+    ctx.body = {
+      status: 1,
+      message: "修改用户的角色成功~",
+    };
+  }
 }
 
 module.exports = new UserController();

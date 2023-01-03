@@ -65,6 +65,17 @@ class UserServise {
 
     return result[0];
   }
+
+  // 修改角色
+  async updateRole(user_id, role_id) {
+    const mysql = `UPDATE user SET role_id = ? WHERE id = ?`;
+    const result = await pool.execute(mysql, [
+      Number(role_id),
+      Number(user_id),
+    ]);
+
+    return result[0];
+  }
 }
 
 module.exports = new UserServise();
