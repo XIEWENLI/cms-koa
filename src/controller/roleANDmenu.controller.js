@@ -8,10 +8,11 @@ class RoleController {
   async createRole(ctx, next) {
     let roleName = ctx.request.query.roleName;
     let grade = Number(ctx.request.query.grade);
+    grade = grade === 1 ? 2 : grade;
     let menu_idArr = ctx.request.query.menu_idArr;
-    menu_idArr = menu_idArr ? menu_idArr.split(",") : 0;
+    menu_idArr = menu_idArr ? menu_idArr.split(",") : [];
 
-    if (!roleName || !grade || !menu_idArr) {
+    if (!roleName || !grade) {
       return ctx.app.emit("error", new Error(PARAM_NOT_NULL), ctx);
     }
 
@@ -36,9 +37,9 @@ class RoleController {
   async updateRole(ctx, next) {
     let role_id = ctx.request.query.role_id;
     let menu_idArr = ctx.request.query.menu_idArr;
-    menu_idArr = menu_idArr ? menu_idArr.split(",") : 0;
+    menu_idArr = menu_idArr ? menu_idArr.split(",") : [];
 
-    if (!role_id || !menu_idArr) {
+    if (!role_id) {
       return ctx.app.emit("error", new Error(PARAM_NOT_NULL), ctx);
     }
 
@@ -52,7 +53,10 @@ class RoleController {
 
   // 查询所有角色
   async getRole(ctx, next) {
-    const res = await roleANDmenuServise.getRoleAndPower();
+    const res = await roleANDmenuServise.getRoleAndPower(
+      ctx.request.query.limit,
+      ctx.request.query.offset
+    );
 
     ctx.body = {
       status: 1,
@@ -67,13 +71,33 @@ class RoleController {
 
     ctx.body = {
       status: 1,
-      message: "删除成功",
+      message: "删除成功~",
     };
   }
 
   // 获取所有权限
   async getPower(ctx, next) {
     const res = await roleANDmenuServise.power();
+
+    ctx.body = {
+      status: 1,
+      message: res,
+    };
+  }
+
+  // 获取指定角色接口
+  async getRoleById(ctx, next) {
+    const res = await roleANDmenuServise.getRoleById(ctx.request.query.role_id);
+
+    ctx.body = {
+      status: 1,
+      message: res,
+    };
+  }
+
+  // 查询所有角色（不附带权限信息）
+  async getAllRole(ctx, next) {
+    const res = await roleANDmenuServise.getAllRole();
 
     ctx.body = {
       status: 1,

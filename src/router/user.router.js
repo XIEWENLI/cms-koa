@@ -11,6 +11,7 @@ const {
   getUsers,
   updateUserLoginStatus,
   delUser,
+  updateRole,
 } = require("../controller/user.controller");
 const { verifyAuth, verifyPower } = require("../middleware/auth.middleware");
 
@@ -35,5 +36,8 @@ userRouter.get(
   verifyPower,
   updateUserLoginStatus
 );
+
+// 修改角色
+userRouter.get("/updateRole", verifyAuth, verifyPower, updateRole);
 
 module.exports = userRouter;

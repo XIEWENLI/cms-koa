@@ -35,21 +35,22 @@ class RoleANDmenu {
 
   // role_menu修改
   async updateRole_Menu(role_id, menu_idArr) {
+    // 先删除所有权限
     const mysql = `DELETE FROM role_menu WHERE role_id=?`;
     await pool.execute(mysql, [role_id]);
 
-    // 角色添加权限
+    // 再角色添加权限
     this.addRole_Menu(role_id, menu_idArr);
   }
 
   // 查询所有角色（附带每个角色的权限）
-  async getRoleAndPower() {
+  async getRoleAndPower(limit = 10, offset = 0) {
     const mysql = `SELECT role.id, role.roleName, role.grade,
-    JSON_ARRAYAGG(JSON_OBJECT('id',menu.id,'path', menu.menuURL, '权限名称', menu.name)) as power
+    JSON_ARRAYAGG(JSON_OBJECT('id',menu.id,'path', menu.menuURL, 'powerName', menu.name)) as power
     FROM role
     LEFT JOIN role_menu ON role.id = role_menu.role_id
     LEFT JOIN menu ON role_menu.menu_id = menu.id
-    GROUP BY role.id;`;
+    GROUP BY role.id LIMIT ${limit} OFFSET ${offset};`;
     const result = await pool.execute(mysql);
 
     return result[0];
@@ -64,6 +65,22 @@ class RoleANDmenu {
   // 获取所有权限
   async power() {
     const mysql = `SELECT * FROM menu`;
+    const result = await pool.execute(mysql);
+
+    return result[0];
+  }
+
+  // 获取指定角色接口
+  async getRoleById(role_id) {
+    const mysql = `SELECT * FROM role WHERE id=?`;
+    const result = await pool.execute(mysql, [role_id]);
+
+    return result[0];
+  }
+
+  // 查询所有角色（不附带权限信息）
+  async getAllRole() {
+    const mysql = `SELECT * FROM role WHERE id !=1`;
     const result = await pool.execute(mysql);
 
     return result[0];
