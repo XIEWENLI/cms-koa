@@ -13,19 +13,19 @@ const { verifyAuth, verifyPower } = require("../middleware/auth.middleware");
 const fileRouter = new Router({ prefix: "/file" });
 
 // 获取已上传的文件切片数组
-fileRouter.get("/getFileSlice", verifyAuth, verifyPower, getFileSlice);
+fileRouter.get("/getFileSlice", getFileSlice);
 
 // 文件上传切片
-fileRouter.post("/uploadFileSlice", verifyAuth, verifyPower, uploadFileSlice);
+fileRouter.post("/uploadFileSlice", uploadFileSlice);
 
 // 合并文件切片
-fileRouter.get("/mergeFile", verifyAuth, verifyPower, mergeFile);
+fileRouter.get("/mergeFile", mergeFile);
 
 // 获取指定条件的全部文件信息
-fileRouter.get("/getFileInfo", verifyAuth, verifyPower, getFileInfo);
+fileRouter.get("/getFileInfo", getFileInfo);
 
 // 获取文件
-fileRouter.get("/getFile", verifyAuth, verifyPower, obtain, downloadFile);
+fileRouter.get("/getFile", obtain, downloadFile);
 
 // 下载文件
 fileRouter.get(
