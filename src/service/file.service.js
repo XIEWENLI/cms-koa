@@ -26,7 +26,7 @@ class fileService {
   }
 
   // 根据user_id和type获取全部文件信息
-  async getFileInfo(user_id = 1, type = "image", limit = 12, offset = 0) {
+  async getFileInfo(user_id = 1, type, limit = 12, offset = 0) {
     const mysql = `SELECT * FROM file WHERE user_id=? AND type LIKE ? LIMIT ${limit} OFFSET ${offset}`;
     const result = await pool.execute(mysql, [user_id, type + "%"]);
     return result[0];

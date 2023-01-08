@@ -26,7 +26,10 @@ class CommonController {
 
   // 获取各个表数据的总数量
   async getSum(ctx, next) {
-    const res = await getSumServise(ctx.request.query.tableName);
+    const res = await getSumServise(
+      ctx.request.query.tableName,
+      ctx.request.query.type
+    );
     ctx.body = {
       status: 1,
       message: res,

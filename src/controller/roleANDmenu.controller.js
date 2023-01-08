@@ -65,14 +65,21 @@ class RoleController {
   }
 
   //指定删除角色
-  deleteRole(ctx, next) {
+  async deleteRole(ctx, next) {
     let role_id = ctx.request.query.role_id;
-    roleANDmenuServise.deleteRoleById(role_id);
+    const res = await roleANDmenuServise.deleteRoleById(role_id);
 
-    ctx.body = {
-      status: 1,
-      message: "删除成功~",
-    };
+    if (!res.state) {
+      ctx.body = {
+        status: res.state,
+        message: res.massage,
+      };
+    } else {
+      ctx.body = {
+        status: res.state,
+        message: res.massage,
+      };
+    }
   }
 
   // 获取所有权限

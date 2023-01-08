@@ -58,8 +58,15 @@ class RoleANDmenu {
 
   //指定删除角色
   async deleteRoleById(role_id) {
-    const mysql = `DELETE FROM role WHERE id=?`;
-    await pool.execute(mysql, [Number(role_id)]);
+    const mysql = `SELECT * FROM user WHERE role_id =?`;
+    const result = await pool.execute(mysql, [Number(role_id)]);
+    if (result[0].length > 0) {
+      return { state: 0, massage: "该角色用户正在使用中~" };
+    }
+
+    const mysql2 = `DELETE FROM role WHERE id=?`;
+    await pool.execute(mysql2, [Number(role_id)]);
+    return { state: 1, massage: "删除成功~" };
   }
 
   // 获取所有权限
