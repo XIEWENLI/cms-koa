@@ -6,6 +6,7 @@ const {
   mergeFile,
   getFileInfo,
   downloadFile,
+  deleteFile,
 } = require("../controller/file.controller");
 const { obtain, download } = require("../middleware/file.middleware");
 const { verifyAuth, verifyPower } = require("../middleware/auth.middleware");
@@ -35,5 +36,8 @@ fileRouter.get(
   download,
   downloadFile
 );
+
+// 删除文件
+fileRouter.get("/deleteFile", deleteFile);
 
 module.exports = fileRouter;

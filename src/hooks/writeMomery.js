@@ -9,8 +9,8 @@ const writeMomery = (p, fileHashName, sum = 1) => {
     path.resolve(__dirname, `../../${p}/${fileHashName}`),
     (err, data) => {
       if (err === null) {
-        size = sum ? data.size : -data.size;
-        commonService.updateMemory(size);
+        size = data.size;
+        commonService.updateMemory(size, sum);
       }
     }
   );

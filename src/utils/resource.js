@@ -11,6 +11,7 @@ const { writeMomery } = require("../hooks/writeMomery");
 const getFileSliceByhash = (hash, suffix) => {
   return new Promise((resolve, reject) => {
     let pathObj = pathByTypeFn(suffix);
+
     let readDirs = fs.readdirSync(
       path.resolve(__dirname, `../../${pathObj.pathSlice}/`)
     );
@@ -127,12 +128,7 @@ const merge = async (user_id, hash, fileName, suffix, type, len) => {
       }
 
       //file表存储信息
-      const file = await filesService.mergeFile(
-        user_id,
-        fileHashName,
-        fileName,
-        type
-      );
+      await filesService.mergeFile(user_id, fileHashName, fileName, type);
 
       resolve("6、合并成功~");
     }, 500);
@@ -147,6 +143,7 @@ const getinfo = (user_id, type = "video", limit, offset) => {
   });
 };
 
+// 下载文件
 const download = (user_id, file_id) => {
   return new Promise(async (resolve, reject) => {
     const oneFileInfo = await filesService.getOneFileInfo(user_id, file_id);
@@ -167,10 +164,16 @@ const download = (user_id, file_id) => {
   });
 };
 
+// 删除文件
+const delFile = async (file_id, userName, url) => {
+  await filesService.del(file_id, userName, url);
+};
+
 module.exports = {
   getFileSliceByhash,
   upload,
   merge,
   getinfo,
   download,
+  delFile,
 };

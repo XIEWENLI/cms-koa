@@ -61,7 +61,7 @@ class RoleANDmenu {
     const mysql = `SELECT * FROM user WHERE role_id =?`;
     const result = await pool.execute(mysql, [Number(role_id)]);
     if (result[0].length > 0) {
-      return { state: 0, massage: "该角色用户正在使用中~" };
+      return { state: 0, massage: "该角色正在使用中~" };
     }
 
     const mysql2 = `DELETE FROM role WHERE id=?`;
