@@ -1,12 +1,13 @@
 const pool = require("../app/database");
 
 class CommonService {
-  async updateMemory(fileSize) {
+  async updateMemory(fileSize, sum) {
     const mysql = `SELECT memory FROM common`;
     const result = await pool.execute(mysql);
 
     // 单位，MB
     fileSize = Number((fileSize / 1024 / 1024).toFixed(3));
+    fileSize = sum ? fileSize : -fileSize;
     let size = Number((result[0][0].memory + fileSize).toFixed(3));
     size < 0 ? 0 : size;
 

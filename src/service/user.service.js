@@ -76,6 +76,14 @@ class UserServise {
 
     return result[0];
   }
+
+  // 根据用户id获取用户信息
+  async getUserById(user_id) {
+    const mysql = `SELECT * FROM user WHERE id = ?`;
+    const result = await pool.execute(mysql, [Number(user_id)]);
+
+    return result[0];
+  }
 }
 
 module.exports = new UserServise();

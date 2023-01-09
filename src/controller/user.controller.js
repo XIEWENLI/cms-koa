@@ -73,6 +73,16 @@ class UserController {
       message: "修改用户的角色成功~",
     };
   }
+
+  // 根据用户id获取用户信息
+  async getUserById(ctx, next) {
+    const res = await userServise.getUserById(ctx.request.query.user_id);
+
+    ctx.body = {
+      status: 1,
+      message: res,
+    };
+  }
 }
 
 module.exports = new UserController();

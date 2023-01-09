@@ -15,10 +15,14 @@ const createToken = (id, username, role_id) => {
 // 验证token
 const verifyToken = (ctx) => {
   // 获取请求携带过来的token
-  const authorization = ctx.headers.authorization;
+  let authorization = ctx.headers.authorization
+    ? ctx.headers.authorization
+    : ctx.request.query.token;
+
   if (!authorization) {
     return ctx.app.emit("error", new Error(USERNAME_LOGIN), ctx);
   }
+
   const token = authorization.replace("Bearer ", "");
   // 验证token
   try {

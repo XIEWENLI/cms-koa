@@ -4,6 +4,7 @@ const {
   merge,
   getinfo,
   download,
+  delFile,
 } = require("../utils/resource");
 
 const { RESOURCE_NOT_EXIST } = require("../constants/user.constants");
@@ -66,6 +67,7 @@ class fileController {
 
   //下载文件
   async downloadFile(ctx, next) {
+    const fileName = ctx.request.query.fileName;
     const { file, type } = await download(
       ctx.user?.id,
       ctx.request.query.file_id
@@ -78,7 +80,24 @@ class fileController {
     if (ctx.download) {
       ctx.response.set("content-type", type);
     }
+    // 使文件下载时设置的默认文件名
+    ctx.attachment(fileName);
+
     ctx.body = file;
+  }
+
+  // 删除文件
+  async deleteFile(ctx, next) {
+    await delFile(
+      ctx.request.query.file_id,
+      ctx.request.query.userName,
+      ctx.request.query.url
+    );
+
+    ctx.body = {
+      status: 1,
+      message: "删除成功~",
+    };
   }
 }
 

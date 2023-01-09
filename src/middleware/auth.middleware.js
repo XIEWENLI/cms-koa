@@ -12,7 +12,7 @@ const verifyAuth = async (ctx, next) => {
   // 验证token
   const result = verifyToken(ctx);
 
-  if (!result) {
+  if (!result.id) {
     ctx.app.emit("error", new Error(USERNAME_LOGIN), ctx);
     return;
   }
