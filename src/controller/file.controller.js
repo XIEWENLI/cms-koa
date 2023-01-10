@@ -39,7 +39,8 @@ class fileController {
       ctx.request.query.fileName,
       ctx.request.query.suffix,
       ctx.request.query.type,
-      ctx.request.query.len
+      ctx.request.query.len,
+      ctx.request.query.fileSize
     );
 
     ctx.body = {
@@ -65,10 +66,11 @@ class fileController {
     };
   }
 
-  //下载文件
+  //获取和下载文件
   async downloadFile(ctx, next) {
     const fileName = ctx.request.query.fileName;
-    const { file, type } = await download(
+
+    const { file, type, size } = await download(
       ctx.user?.id,
       ctx.request.query.file_id
     );
@@ -77,11 +79,16 @@ class fileController {
       return ctx.app.emit("error", new Error(RESOURCE_NOT_EXIST), ctx);
     }
 
-    if (ctx.download) {
-      ctx.response.set("content-type", type);
+    if (!ctx.download) {
+      // 解决前端播放进度条拖动失效问题
+      ctx.set("Accept-Ranges", "bytes");
+      ctx.set("Content-Length", size);
+      // 使文件在线展示，而不是默认下载
+      ctx.set("content-type", type);
+    } else {
+      // 使文件下载时设置的默认文件名
+      ctx.attachment(fileName);
     }
-    // 使文件下载时设置的默认文件名
-    ctx.attachment(fileName);
 
     ctx.body = file;
   }
