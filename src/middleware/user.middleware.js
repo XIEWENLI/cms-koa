@@ -47,6 +47,7 @@ const passwordMD5 = async (ctx, next) => {
 // 2、登录-密码正确性
 const verifyLogin = async (ctx, next) => {
   const { username, password } = ctx.request.body;
+
   // 用户名或密码不能为空
   if (!username || !password) {
     return ctx.app.emit("error", new Error(USERNAME_PASSWORD_NOT_NULL), ctx);

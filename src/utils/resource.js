@@ -47,7 +47,7 @@ const upload = (ctx) => {
 };
 
 // 合并切片
-const merge = async (user_id, hash, fileName, suffix, type, len) => {
+const merge = async (user_id, hash, fileName, suffix, type, len, fileSize) => {
   return new Promise((resolve, reject) => {
     setTimeout(async () => {
       let fileHashName = hash + "." + suffix;
@@ -128,7 +128,13 @@ const merge = async (user_id, hash, fileName, suffix, type, len) => {
       }
 
       //file表存储信息
-      await filesService.mergeFile(user_id, fileHashName, fileName, type);
+      await filesService.mergeFile(
+        user_id,
+        fileHashName,
+        fileName,
+        type,
+        fileSize
+      );
 
       resolve("6、合并成功~");
     }, 500);
@@ -143,16 +149,17 @@ const getinfo = (user_id, type = "video", limit, offset) => {
   });
 };
 
-// 下载文件
+// 获取和下载文件
 const download = (user_id, file_id) => {
   return new Promise(async (resolve, reject) => {
     const oneFileInfo = await filesService.getOneFileInfo(user_id, file_id);
+
     if (oneFileInfo.length <= 0) {
       resolve({ file: 0, type: 0 });
       return;
     }
 
-    const { fileHashName, type } = oneFileInfo[0];
+    const { fileHashName, type, size } = oneFileInfo[0];
     const t = type.split("/")[1];
     const pathObj = pathByTypeFn(t);
 
@@ -160,7 +167,7 @@ const download = (user_id, file_id) => {
       path.resolve(__dirname, `../../${pathObj.path}/${fileHashName}`)
     );
 
-    resolve({ file, type });
+    resolve({ file, type, size });
   });
 };
 

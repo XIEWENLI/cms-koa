@@ -5,13 +5,20 @@ const { writeMomery } = require("../hooks/writeMomery");
 
 class fileService {
   //合并切片后信息写入
-  async mergeFile(user_id = 1, fileHashName, fileName, type) {
+  async mergeFile(user_id = 1, fileHashName, fileName, type, fileSize) {
     const res = await isFileExist(user_id, fileHashName);
+    // 文件大小，单位M
 
     if (res.length < 1) {
       // 写入文件
-      const mysql = `INSERT INTO file(fileHashName,fileName,user_id,type) VALUES(?,?,?,?)`;
-      await pool.execute(mysql, [fileHashName, fileName, user_id, type]);
+      const mysql = `INSERT INTO file(fileHashName,fileName,user_id,type,size) VALUES(?,?,?,?,?)`;
+      await pool.execute(mysql, [
+        fileHashName,
+        fileName,
+        user_id,
+        type,
+        Number(fileSize),
+      ]);
 
       const res2 = await isFileExist(user_id, fileHashName);
 
@@ -39,6 +46,7 @@ class fileService {
   async getOneFileInfo(user_id = 1, file_id = 1) {
     const mysql = `SELECT * FROM file WHERE user_id=? AND id=?`;
     const result = await pool.execute(mysql, [user_id, file_id]);
+
     return result[0];
   }
 
