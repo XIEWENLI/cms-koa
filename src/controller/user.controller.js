@@ -40,7 +40,8 @@ class UserController {
   async getUsers(ctx, next) {
     const usersInfo = await userServise.getUsersInfo(
       ctx.request.query.limit,
-      ctx.request.query.offset
+      ctx.request.query.offset,
+      ctx.request.query.inputVal
     );
 
     ctx.body = {
@@ -78,6 +79,15 @@ class UserController {
   async getUserById(ctx, next) {
     const res = await userServise.getUserById(ctx.request.query.user_id);
 
+    ctx.body = {
+      status: 1,
+      message: res,
+    };
+  }
+
+  // 根据用户userName获取用户信息
+  async getUserByuserName(ctx, next) {
+    const res = await userServise.getUserByuserName(ctx.request.query.userName);
     ctx.body = {
       status: 1,
       message: res,

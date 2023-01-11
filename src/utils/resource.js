@@ -142,9 +142,15 @@ const merge = async (user_id, hash, fileName, suffix, type, len, fileSize) => {
 };
 
 // 根据user_id和type获取全部文件信息
-const getinfo = (user_id, type = "video", limit, offset) => {
+const getinfo = (user_id, type, limit, offset, inputVal) => {
   return new Promise((resolve, reject) => {
-    const filesInfo = filesService.getFileInfo(user_id, type, limit, offset);
+    const filesInfo = filesService.getFileInfo(
+      user_id,
+      type,
+      limit,
+      offset,
+      inputVal
+    );
     resolve(filesInfo);
   });
 };

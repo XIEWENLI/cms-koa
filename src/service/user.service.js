@@ -34,11 +34,18 @@ class UserServise {
   }
 
   // 获取自定条件的所有用户
-  async getUsersInfo(limit = 10, offset = 0) {
-    const mysql = `SELECT id,username,wx_openid,loginStatus,role_id FROM user WHERE id !=1 LIMIT ${limit} OFFSET ${offset}`;
-    const result = await pool.execute(mysql);
+  async getUsersInfo(limit = 10, offset = 0, inputVal) {
+    inputVal = inputVal === "" ? undefined : inputVal;
+    if (inputVal === undefined) {
+      const mysql = `SELECT id,username,loginStatus,role_id FROM user WHERE id !=1 LIMIT ${limit} OFFSET ${offset}`;
+      const result = await pool.execute(mysql);
 
-    return result[0];
+      return result[0];
+    } else {
+      const mysql = `SELECT id,username,loginStatus,role_id FROM user WHERE id !=1 AND username=? LIMIT ${limit} OFFSET ${offset}`;
+      const result = await pool.execute(mysql, [inputVal]);
+      return result[0];
+    }
   }
 
   // 获取menu
@@ -81,6 +88,14 @@ class UserServise {
   async getUserById(user_id) {
     const mysql = `SELECT * FROM user WHERE id = ?`;
     const result = await pool.execute(mysql, [Number(user_id)]);
+
+    return result[0];
+  }
+
+  // 根据用户userName获取用户信息
+  async getUserByuserName(userName) {
+    const mysql = `SELECT * FROM user WHERE username = ?`;
+    const result = await pool.execute(mysql, [userName]);
 
     return result[0];
   }

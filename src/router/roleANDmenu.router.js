@@ -26,7 +26,7 @@ roleANDmenu.get("/createRole", verifyAuth, verifyPower, createRole);
 roleANDmenu.get("/updateRole", verifyAuth, verifyPower, updateRole);
 
 // 获取所有的权限
-roleANDmenu.get("/getPower", getPower);
+roleANDmenu.get("/getPower", verifyAuth, verifyPower, getPower);
 
 // 获取指定角色接口
 roleANDmenu.get("/getRoleById", verifyAuth, verifyPower, getRoleById);
