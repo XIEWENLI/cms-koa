@@ -13,6 +13,7 @@ const {
   delUser,
   updateRole,
   getUserById,
+  getUserByuserName,
 } = require("../controller/user.controller");
 const { verifyAuth, verifyPower } = require("../middleware/auth.middleware");
 
@@ -42,6 +43,14 @@ userRouter.get(
 userRouter.get("/updateRole", verifyAuth, verifyPower, updateRole);
 
 // 根据用户id获取用户信息
-userRouter.get("/getUserById", getUserById);
+userRouter.get("/getUserById", verifyAuth, verifyPower, getUserById);
+
+// 根据用户userName获取用户信息
+userRouter.get(
+  "/getUserByuserName",
+  verifyAuth,
+  verifyPower,
+  getUserByuserName
+);
 
 module.exports = userRouter;

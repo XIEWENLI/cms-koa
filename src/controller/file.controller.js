@@ -16,7 +16,6 @@ class fileController {
       ctx.request.query.hash,
       ctx.request.query.suffix
     );
-
     ctx.body = res;
   }
 
@@ -33,8 +32,14 @@ class fileController {
 
   // 合并切片
   async mergeFile(ctx, next) {
+    let user_id = ctx.request.query.user_id;
+    if (!user_id) {
+      user_id = ctx.user.id;
+    }
+    user_id = Number(user_id);
+
     const res = await merge(
-      ctx.user?.id,
+      user_id,
       ctx.request.query.hash,
       ctx.request.query.fileName,
       ctx.request.query.suffix,
@@ -54,10 +59,11 @@ class fileController {
   // 根据user_id和type获取全部文件信息
   async getFileInfo(ctx, next) {
     const fileInfo = await getinfo(
-      ctx.user?.id,
+      ctx.user.id,
       ctx.request.query.type,
       ctx.request.query.limit,
-      ctx.request.query.offset
+      ctx.request.query.offset,
+      ctx.request.query.inputVal
     );
 
     ctx.body = {
@@ -69,9 +75,15 @@ class fileController {
   //获取和下载文件
   async downloadFile(ctx, next) {
     const fileName = ctx.request.query.fileName;
+    let user_id = ctx.request.query.user_id;
+    const user_id2 = ctx.user.id;
+
+    if (user_id === undefined) {
+      user_id = user_id2;
+    }
 
     const { file, type, size } = await download(
-      ctx.user?.id,
+      user_id,
       ctx.request.query.file_id
     );
 

@@ -5,7 +5,7 @@ const { writeMomery } = require("../hooks/writeMomery");
 
 class fileService {
   //合并切片后信息写入
-  async mergeFile(user_id = 1, fileHashName, fileName, type, fileSize) {
+  async mergeFile(user_id, fileHashName, fileName, type, fileSize) {
     const res = await isFileExist(user_id, fileHashName);
     // 文件大小，单位M
 
@@ -36,14 +36,46 @@ class fileService {
   }
 
   // 根据user_id和type获取全部文件信息
-  async getFileInfo(user_id = 1, type, limit = 12, offset = 0) {
-    const mysql = `SELECT * FROM file WHERE user_id=? AND type LIKE ? LIMIT ${limit} OFFSET ${offset}`;
-    const result = await pool.execute(mysql, [user_id, type + "%"]);
-    return result[0];
+  async getFileInfo(user_id, type, limit = 12, offset = 0, inputVal) {
+    inputVal = inputVal === "" ? undefined : inputVal;
+    console.log(user_id);
+    // 查询用户的role_id
+    let mysql = `SELECT * FROM user WHERE id=?`;
+    const result = await pool.execute(mysql, [user_id]);
+    const role_id = result[0][0].role_id;
+
+    if (inputVal !== undefined && role_id !== 3) {
+      // 管理员搜索查询的file
+      let mysql2 = `SELECT * FROM user WHERE username = ?`;
+      const result2 = await pool.execute(mysql2, [inputVal]);
+      if (result2[0].length <= 0) {
+        return [];
+      }
+      let mysql3 = `SELECT * FROM file WHERE user_id=? AND type LIKE ? LIMIT ${limit} OFFSET ${offset}`;
+
+      const result3 = await pool.execute(mysql3, [
+        result2[0][0].id,
+        type + "%",
+      ]);
+
+      return result3[0];
+    } else if (inputVal === undefined && role_id !== 3) {
+      // 管理查询的file（不带inputVal搜索值）
+      let mysql4 = `SELECT * FROM file WHERE type LIKE ? LIMIT ${limit} OFFSET ${offset}`;
+
+      const result4 = await pool.execute(mysql4, [type + "%"]);
+      return result4[0];
+    } else if (role_id === 3) {
+      // 个人用户的file
+      let mysql5 = `SELECT * FROM file WHERE user_id=? AND type LIKE ? LIMIT ${limit} OFFSET ${offset}`;
+
+      const result5 = await pool.execute(mysql5, [user_id, type + "%"]);
+      return result5[0];
+    }
   }
 
   // 获取单个文件信息
-  async getOneFileInfo(user_id = 1, file_id = 1) {
+  async getOneFileInfo(user_id, file_id) {
     const mysql = `SELECT * FROM file WHERE user_id=? AND id=?`;
     const result = await pool.execute(mysql, [user_id, file_id]);
 
@@ -66,8 +98,8 @@ class fileService {
     const mysql3 = `DELETE FROM file WHERE id=? AND user_id=?`;
     pool.execute(mysql3, [Number(file_id), Number(user_id)]).then(async () => {
       // 该文件无其它用户引用则删除
-      const mysql4 = `SELECT * FROM file WHERE id=?`;
-      const result4 = await pool.execute(mysql4, [Number(file_id)]);
+      const mysql4 = `SELECT * FROM file WHERE fileHashName=?`;
+      const result4 = await pool.execute(mysql4, [fileHashName]);
 
       if (result4[0][0] === undefined) {
         // 获取文件大小存储到common表

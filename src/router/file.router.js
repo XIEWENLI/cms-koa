@@ -23,10 +23,10 @@ fileRouter.post("/uploadFileSlice", uploadFileSlice);
 fileRouter.get("/mergeFile", mergeFile);
 
 // 获取指定条件的全部文件信息
-fileRouter.get("/getFileInfo", getFileInfo);
+fileRouter.get("/getFileInfo", verifyAuth, verifyPower, getFileInfo);
 
 // 获取文件
-fileRouter.get("/getFile", obtain, downloadFile);
+fileRouter.get("/getFile", verifyAuth, verifyPower, obtain, downloadFile);
 
 // 下载文件
 fileRouter.get(

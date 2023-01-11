@@ -55,7 +55,8 @@ class RoleController {
   async getRole(ctx, next) {
     const res = await roleANDmenuServise.getRoleAndPower(
       ctx.request.query.limit,
-      ctx.request.query.offset
+      ctx.request.query.offset,
+      ctx.request.query.inputVal
     );
 
     ctx.body = {

@@ -44,16 +44,35 @@ class RoleANDmenu {
   }
 
   // 查询所有角色（附带每个角色的权限）
-  async getRoleAndPower(limit = 10, offset = 0) {
-    const mysql = `SELECT role.id, role.roleName, role.grade,
-    JSON_ARRAYAGG(JSON_OBJECT('id',menu.id,'path', menu.menuURL, 'powerName', menu.name)) as power
-    FROM role
-    LEFT JOIN role_menu ON role.id = role_menu.role_id
-    LEFT JOIN menu ON role_menu.menu_id = menu.id
-    GROUP BY role.id LIMIT ${limit} OFFSET ${offset};`;
-    const result = await pool.execute(mysql);
+  async getRoleAndPower(limit = 10, offset = 0, inputVal) {
+    inputVal = inputVal === "" ? undefined : inputVal;
+    if (inputVal === undefined) {
+      const mysql = `SELECT role.id, role.roleName, role.grade,
+                    JSON_ARRAYAGG(JSON_OBJECT('id',menu.id,'path', menu.menuURL, 'powerName', menu.name)) as power
+                     FROM role
+                     LEFT JOIN role_menu ON role.id = role_menu.role_id
+                     LEFT JOIN menu ON role_menu.menu_id = menu.id
+                     GROUP BY role.id LIMIT ${limit} OFFSET ${offset};`;
+      const result = await pool.execute(mysql);
 
-    return result[0];
+      return result[0];
+    } else {
+      const mysql = `SELECT * FROM role WHERE roleName=?`;
+      const result = await pool.execute(mysql, [inputVal]);
+      if (result[0].length <= 0) {
+        return [];
+      }
+
+      const mysql2 = `SELECT role.id, role.roleName, role.grade,
+                     JSON_ARRAYAGG(JSON_OBJECT('id',menu.id,'path', menu.menuURL, 'powerName', menu.name)) as power
+                     FROM role
+                     LEFT JOIN role_menu ON role.id = role_menu.role_id
+                     LEFT JOIN menu ON role_menu.menu_id = menu.id
+                     GROUP BY role.id AND  role.roleName=${inputVal} LIMIT ${limit} OFFSET ${offset};`;
+      const result2 = await pool.execute(mysql2);
+
+      return result2[0];
+    }
   }
 
   //指定删除角色
