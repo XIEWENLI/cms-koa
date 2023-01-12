@@ -36,15 +36,15 @@ class fileService {
   }
 
   // 根据user_id和type获取全部文件信息
-  async getFileInfo(user_id, type, limit = 12, offset = 0, inputVal) {
+  async getFileInfo(user_id, type, limit = 12, offset = 0, inputVal, web = 0) {
     inputVal = inputVal === "" ? undefined : inputVal;
-    console.log(user_id);
+
     // 查询用户的role_id
     let mysql = `SELECT * FROM user WHERE id=?`;
     const result = await pool.execute(mysql, [user_id]);
     const role_id = result[0][0].role_id;
 
-    if (inputVal !== undefined && role_id !== 3) {
+    if (inputVal !== undefined && role_id !== 3 && !Number(web)) {
       // 管理员搜索查询的file
       let mysql2 = `SELECT * FROM user WHERE username = ?`;
       const result2 = await pool.execute(mysql2, [inputVal]);
@@ -59,13 +59,13 @@ class fileService {
       ]);
 
       return result3[0];
-    } else if (inputVal === undefined && role_id !== 3) {
+    } else if (inputVal === undefined && role_id !== 3 && !Number(web)) {
       // 管理查询的file（不带inputVal搜索值）
       let mysql4 = `SELECT * FROM file WHERE type LIKE ? LIMIT ${limit} OFFSET ${offset}`;
 
       const result4 = await pool.execute(mysql4, [type + "%"]);
       return result4[0];
-    } else if (role_id === 3) {
+    } else if (Number(web)) {
       // 个人用户的file
       let mysql5 = `SELECT * FROM file WHERE user_id=? AND type LIKE ? LIMIT ${limit} OFFSET ${offset}`;
 
