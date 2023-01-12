@@ -28,7 +28,9 @@ class CommonController {
   async getSum(ctx, next) {
     const res = await getSumServise(
       ctx.request.query.tableName,
-      ctx.request.query.type
+      ctx.request.query.type,
+      ctx.request.query.web,
+      ctx.user.id
     );
     ctx.body = {
       status: 1,

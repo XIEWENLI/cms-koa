@@ -21,7 +21,7 @@ class fileController {
 
   // 上传切片
   async uploadFileSlice(ctx, next) {
-    const res = await upload(ctx);
+    await upload(ctx);
 
     ctx.body = {
       status: 1,
@@ -63,7 +63,8 @@ class fileController {
       ctx.request.query.type,
       ctx.request.query.limit,
       ctx.request.query.offset,
-      ctx.request.query.inputVal
+      ctx.request.query.inputVal,
+      ctx.request.query.web
     );
 
     ctx.body = {

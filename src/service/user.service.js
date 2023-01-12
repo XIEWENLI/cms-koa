@@ -1,8 +1,7 @@
 const pool = require("../app/database");
 class UserServise {
   // 创建用户
-  async create(user) {
-    let role_id = 2;
+  async create(user, role_id = 2) {
     const mysql = `INSERT INTO user(username,password,role_id) VALUES(?,?,?)`;
     const result = await pool.execute(mysql, [
       user.username,

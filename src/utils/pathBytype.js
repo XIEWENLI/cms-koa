@@ -1,7 +1,7 @@
 const pathByTypeFn = (type) => {
   let pathSlice;
   let path;
-  if (type === "jpeg" || type === "png") {
+  if (type === "jpeg" || type === "jpg" || type === "png") {
     pathSlice = "upload/uploadPhotos/slice";
     path = "upload/uploadPhotos/photos";
   } else if (type === "mp4") {

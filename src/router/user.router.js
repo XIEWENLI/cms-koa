@@ -2,12 +2,17 @@ const Router = require("koa-router");
 
 const {
   verifyRegister,
+  verifyRegister2,
   passwordMD5,
+  passwordMD52,
   verifyLogin,
+  verifyLogin2,
 } = require("../middleware/user.middleware");
 const {
   register,
+  register2,
   login,
+  login2,
   getUsers,
   updateUserLoginStatus,
   delUser,
@@ -22,8 +27,12 @@ const userRouter = new Router({ prefix: "/user" });
 // 注册
 userRouter.post("/register", verifyRegister, passwordMD5, register);
 
+userRouter.post("/register2", verifyRegister2, passwordMD52, register2);
+
 // 登录
 userRouter.post("/login", verifyLogin, login);
+
+userRouter.post("/login2", verifyLogin2, login2);
 
 // 删除用户
 userRouter.get("/delUser", delUser);

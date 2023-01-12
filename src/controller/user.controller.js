@@ -17,8 +17,32 @@ class UserController {
     };
   }
 
+  async register2(ctx, next) {
+    await userServise.create(ctx.request.body, 3);
+
+    // comon表用户记录+1
+    writeNumberOfUsers();
+
+    ctx.body = {
+      status: 1,
+      message: "注册成功~",
+    };
+  }
+
   // 登录
   async login(ctx, next) {
+    const { id, username, role_id } = ctx.user;
+
+    // 创建token
+    const token = createToken(id, username, role_id);
+
+    // 获取菜单menu
+    const menu = await userServise.getMenu(role_id);
+
+    ctx.body = { status: 1, id, username, role_id, token, menu };
+  }
+
+  async login2(ctx, next) {
     const { id, username, role_id } = ctx.user;
 
     // 创建token
