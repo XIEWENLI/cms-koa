@@ -1,4 +1,7 @@
+const fs = require("fs");
+const path = require("path");
 const pool = require("../app/database");
+const commonService = require("../service/common.service");
 class UserServise {
   // 创建用户
   async create(user, role_id = 2) {
@@ -14,10 +17,46 @@ class UserServise {
 
   // 删除用户
   async delUserByUserId(user_id) {
-    const mysql = `DELETE FROM user WHERE id=?;`;
+    const mysql = `SELECT * FROM file WHERE user_id=?`;
     const result = await pool.execute(mysql, [user_id]);
 
-    return result;
+    // 删除该用户的所有资源
+    result[0].forEach((item) => {
+      let url = path.resolve(
+        __dirname,
+        `../../upload/uploadPhotos/photos/${item.fileHashName}`
+      );
+
+      let url2 = path.resolve(
+        __dirname,
+        `../../upload/uploadVideo/videos/${item.fileHashName}`
+      );
+
+      // 文件存在时err = false；文件不存在时err = true
+      fs.access(url, fs.constants.F_OK, (err) => {
+        if (!err) {
+          fs.unlinkSync(url);
+          commonService.updateMemory(item.size, 0);
+        } else {
+          fs.unlinkSync(url2);
+          commonService.updateMemory(item.size, 0);
+        }
+      });
+    });
+
+    const mysql2 = `DELETE FROM user WHERE id=?;`;
+    const result2 = await pool.execute(mysql2, [user_id]);
+
+    // 修改common的user数量
+    const mysql3 = `SELECT numberOfUsers FROM common`;
+    const result3 = await pool.execute(mysql3);
+
+    let sum = result3[0][0].numberOfUsers - 1;
+
+    const mysql4 = `UPDATE common SET numberOfUsers = ?`;
+    await pool.execute(mysql4, [sum]);
+
+    return result2[0];
   }
 
   // 根据传过来的条件和参数查询用户

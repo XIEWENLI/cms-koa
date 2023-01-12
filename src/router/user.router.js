@@ -35,7 +35,7 @@ userRouter.post("/login", verifyLogin, login);
 userRouter.post("/login2", verifyLogin2, login2);
 
 // 删除用户
-userRouter.get("/delUser", delUser);
+userRouter.get("/delUser", verifyAuth, verifyPower, delUser);
 
 // 获取自定条件的所有用户
 userRouter.get("/getUsers", verifyAuth, verifyPower, getUsers);

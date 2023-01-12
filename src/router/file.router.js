@@ -38,6 +38,6 @@ fileRouter.get(
 );
 
 // 删除文件
-fileRouter.get("/deleteFile", deleteFile);
+fileRouter.get("/deleteFile", verifyAuth, verifyPower, deleteFile);
 
 module.exports = fileRouter;
