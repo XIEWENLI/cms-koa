@@ -87,12 +87,12 @@ const verifyLogin = async (ctx, next) => {
 
   // 验证该功能是否关闭_所有
   let isStatus = await verifyCommonStatus("loginStatus_all_admin");
-  if (!isStatus && result[0].id != 1) {
+
+  if (!isStatus && result[0]?.id != 1) {
     return ctx.app.emit("error", new Error(FUNCTION_NOT), ctx);
   }
-
   //用户名不存在
-  if (!result.length) {
+  if (result.length <= 0) {
     return ctx.app.emit("error", new Error(USERNAME_NULL), ctx);
   }
   // 密码错误
@@ -133,7 +133,7 @@ const verifyLogin2 = async (ctx, next) => {
   }
 
   //用户名不存在
-  if (!result.length) {
+  if (result.length <= 0) {
     return ctx.app.emit("error", new Error(USERNAME_NULL), ctx);
   }
 
