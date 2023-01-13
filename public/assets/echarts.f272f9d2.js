@@ -1,0 +1,1 @@
+import{b6 as t}from"./index.f968eb52.js";const e=()=>t(()=>import("./echarts.fc4d2812.js"),["assets/echarts.fc4d2812.js","assets/index.f968eb52.js","assets/index.f124346f.css","assets/_plugin-vue_export-helper.cdc0426e.js","assets/echarts.7112f054.css"]),r={path:"/main/echarts",name:"echarts",component:e,children:[]};export{r as default};
