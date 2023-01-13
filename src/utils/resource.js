@@ -11,11 +11,11 @@ const { writeMomery } = require("../hooks/writeMomery");
 const getFileSliceByhash = (hash, suffix) => {
   return new Promise((resolve, reject) => {
     let pathObj = pathByTypeFn(suffix);
-
+    console.log(123, path.resolve(__dirname, `../../${pathObj.pathSlice}/`));
     let readDirs = fs.readdirSync(
       path.resolve(__dirname, `../../${pathObj.pathSlice}/`)
     );
-
+    console.log(456, readDirs);
     readDirs = readDirs.filter((item) => {
       return item.includes(hash);
     });
