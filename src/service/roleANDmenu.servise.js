@@ -46,6 +46,7 @@ class RoleANDmenu {
   // 查询所有角色（附带每个角色的权限）
   async getRoleAndPower(limit = 10, offset = 0, inputVal) {
     inputVal = inputVal === "" ? undefined : inputVal;
+
     if (inputVal === undefined) {
       const mysql = `SELECT role.id, role.roleName, role.grade,
                     JSON_ARRAYAGG(JSON_OBJECT('id',menu.id,'path', menu.menuURL, 'powerName', menu.name)) as power
@@ -59,6 +60,7 @@ class RoleANDmenu {
     } else {
       const mysql = `SELECT * FROM role WHERE roleName=?`;
       const result = await pool.execute(mysql, [inputVal]);
+
       if (result[0].length <= 0) {
         return [];
       }
@@ -68,8 +70,8 @@ class RoleANDmenu {
                      FROM role
                      LEFT JOIN role_menu ON role.id = role_menu.role_id
                      LEFT JOIN menu ON role_menu.menu_id = menu.id
-                     GROUP BY role.id AND  role.roleName=${inputVal} LIMIT ${limit} OFFSET ${offset};`;
-      const result2 = await pool.execute(mysql2);
+                     GROUP BY role.id AND  role.roleName=? LIMIT ${limit} OFFSET ${offset};`;
+      const result2 = await pool.execute(mysql2, [inputVal]);
 
       return result2[0];
     }
