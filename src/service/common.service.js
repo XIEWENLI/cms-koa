@@ -1,18 +1,27 @@
 const pool = require("../app/database");
 
 class CommonService {
-  async updateMemory(fileSize, sum) {
-    const mysql = `SELECT memory FROM common`;
-    const result = await pool.execute(mysql);
+  async updateMemory(fileSize, sum, len) {
+    if (Math.ceil(fileSize / 1024 / 1024 / 5) >= len) {
+      const mysql = `SELECT memory FROM common`;
+      const result = await pool.execute(mysql);
 
-    // 单位，MB
-    fileSize = Number((fileSize / 1024 / 1024).toFixed(3));
-    fileSize = sum ? fileSize : -fileSize;
-    let size = Number((result[0][0].memory + fileSize).toFixed(3));
-    size < 0 ? 0 : size;
-
-    const mysql2 = `UPDATE common SET memory = ?`;
-    await pool.execute(mysql2, [size]);
+      // 单位，MB
+      fileSize = Number((fileSize / 1024 / 1024).toFixed(3));
+      if (sum) {
+        let size = Number((result[0][0].memory + fileSize).toFixed(3));
+        size = size < 0 ? 0 : size;
+        const mysql2 = `UPDATE common SET memory = ?`;
+        const result2 = await pool.execute(mysql2, [size]);
+        return result2[0];
+      } else {
+        let size = Number((result[0][0].memory - fileSize).toFixed(3));
+        size = size < 0 ? 0 : size;
+        const mysql2 = `UPDATE common SET memory = ?`;
+        const result2 = await pool.execute(mysql2, [size]);
+        return result2[0];
+      }
+    }
   }
 
   async writeNumberOfUsers() {

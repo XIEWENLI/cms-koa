@@ -91,7 +91,7 @@ const merge = async (user_id, hash, fileName, suffix, type, len, fileSize) => {
           await writeFile(item);
 
           // 获取文件大小存储到common表
-          writeMomery(pathObj.path, fileHashName, 1);
+          await writeMomery(pathObj.path, fileHashName, 1, len);
         } else {
           deleteFile(item);
         }

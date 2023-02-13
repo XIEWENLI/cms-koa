@@ -103,9 +103,14 @@ class fileService {
 
       if (result4[0][0] === undefined) {
         // 获取文件大小存储到common表
-        writeMomery(url, fileHashName, 0);
+        await writeMomery(url, fileHashName, 0);
 
-        fs.unlinkSync(path.resolve(__dirname, `../../${url}/${fileHashName}`));
+        // 定时器解决部署上线后，改变common表字时段出现先删除问题
+        setTimeout(() => {
+          fs.unlinkSync(
+            path.resolve(__dirname, `../../${url}/${fileHashName}`)
+          );
+        }, 500);
       }
 
       return result[0];
