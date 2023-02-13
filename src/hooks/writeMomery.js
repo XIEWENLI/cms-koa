@@ -4,13 +4,14 @@ const path = require("path");
 const commonService = require("../service/common.service");
 
 // 获取改文件大小存储到common表
-const writeMomery = (p, fileHashName, sum = 1) => {
+const writeMomery = (p, fileHashName, sum = 1, len = 1) => {
   fs.stat(
     path.resolve(__dirname, `../../${p}/${fileHashName}`),
-    (err, data) => {
+    async (err, data) => {
       if (err === null) {
         let size = data.size;
-        commonService.updateMemory(size, sum);
+        const result = await commonService.updateMemory(size, sum, len);
+        return result;
       }
     }
   );

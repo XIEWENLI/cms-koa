@@ -19,7 +19,10 @@ const verifyAuth = async (ctx, next) => {
 
   // 验证该功能是否关闭_所有
   let loginStatus = "loginStatus_all_admin";
-  let isUser = ctx.request.query.isUser;
+  let isUser =
+    ctx.request.query.isUser === undefined
+      ? ctx.response.isUser
+      : ctx.request.query.isUser;
 
   if (isUser !== undefined) {
     loginStatus = "loginStatus_all_user";
